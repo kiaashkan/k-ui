@@ -115,7 +115,7 @@ install_x-ui() {
     cd /usr/local/
 
     # لینک ثابت
-    url="https://github.com/kiaashkan/k-ui/releases/download/v1.7.5/x-ui-linux-$(arch3xui).tar.gz"
+    url="https://github.com/kiaashkan/k-ui/releases/download/${last_version}/x-ui-linux-$(arch3xui).tar.gz"
     echo -e "Beginning to install x-ui from provided link: $url"
     wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch3xui).tar.gz "$url"
     if [[ $? -ne 0 ]]; then
