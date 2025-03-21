@@ -44,12 +44,10 @@ elif [[ "${release}" == "ubuntu" ]]; then
     if [[ ${os_version} -lt 20 ]]; then
         echo -e "${red}please use Ubuntu 20 or higher version!${plain}\n" && exit 1
     fi
-
 elif [[ "${release}" == "fedora" ]]; then
     if [[ ${os_version} -lt 36 ]]; then
         echo -e "${red}please use Fedora 36 or higher version!${plain}\n" && exit 1
     fi
-
 elif [[ "${release}" == "debian" ]]; then
     if [[ ${os_version} -lt 10 ]]; then
         echo -e "${red} Please use Debian 10 or higher ${plain}\n" && exit 1
@@ -60,7 +58,6 @@ elif [[ "${release}" == "manjaro" ]]; then
     echo "Your OS is Manjaro"
 elif [[ "${release}" == "armbian" ]]; then
     echo "Your OS is Armbian"
-
 else
     echo -e "${red}Failed to check the OS version, please contact the author!${plain}" && exit 1
 fi
@@ -78,7 +75,6 @@ install_base() {
             ;;
     esac
 }
-
 
 # This function will be called when user installed x-ui out of security
 config_after_install() {
@@ -118,27 +114,13 @@ config_after_install() {
 install_x-ui() {
     cd /usr/local/
 
-    if [ $# == 0 ]; then
-        last_version=$(curl -Ls "https://api.github.com/repos/kiaashkan/k-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-        if [[ ! -n "$last_version" ]]; then
-            echo -e "${red}Failed to fetch x-ui version, it maybe due to Github API restrictions, please try it later${plain}"
-            exit 1
-        fi
-        echo -e "Got x-ui latest version: ${last_version}, beginning the installation..."
-        wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch3xui).tar.gz https://github.com/kiaashkan/k-ui/releases/download/${last_version}/x-ui-linux-$(arch3xui).tar.gz
-        if [[ $? -ne 0 ]]; then
-            echo -e "${red}Downloading x-ui failed, please be sure that your server can access Github ${plain}"
-            exit 1
-        fi
-    else
-        last_version=$1
-        url="https://github.com/kiaashkan/k-ui/releases/download/${last_version}/x-ui-linux-$(arch3xui).tar.gz"
-        echo -e "Begining to install x-ui $1"
-        wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch3xui).tar.gz ${url}
-        if [[ $? -ne 0 ]]; then
-            echo -e "${red}Download x-ui $1 failed,please check the version exists ${plain}"
-            exit 1
-        fi
+    # لینک ثابت با نسخه 1.7.5
+    url="https://github.com/kiaashkan/k-ui/releases/download/v1.7.5/x-ui-linux-$(arch3xui).tar.gz"
+    echo -e "Beginning to install x-ui v1.7.5 from provided link..."
+    wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch3xui).tar.gz "$url"
+    if [[ $? -ne 0 ]]; then
+        echo -e "${red}Download x-ui v1.7.5 failed, please check the URL or your network ${plain}"
+        exit 1
     fi
 
     if [[ -e /usr/local/x-ui/ ]]; then
@@ -151,20 +133,14 @@ install_x-ui() {
     cd x-ui
     chmod +x x-ui bin/xray-linux-$(arch3xui)
     cp -f x-ui.service /etc/systemd/system/
-    wget --no-check-certificate -O /usr/bin/x-ui https://raw.githubusercontent.com/kiaashkan/k-ui/main/x-ui.sh
+    wget --no-check-certificate -O /usr/bin/x-ui https://raw.githubusercontent.com/MHSanaei/3x-ui/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
     chmod +x /usr/bin/x-ui
     config_after_install
-    #echo -e "If it is a new installation, the default web port is ${green}2053${plain}, The username and password are ${green}admin${plain} by default"
-    #echo -e "Please make sure that this port is not occupied by other procedures,${yellow} And make sure that port 2053 has been released${plain}"
-    #    echo -e "If you want to modify the 2053 to other ports and enter the x-ui command to modify it, you must also ensure that the port you modify is also released"
-    #echo -e ""
-    #echo -e "If it is updated panel, access the panel in your previous way"
-    #echo -e ""
     systemctl daemon-reload
     systemctl enable x-ui
     systemctl start x-ui
-    echo -e "${green}x-ui ${last_version}${plain} installation finished, it is running now..."
+    echo -e "${green}x-ui v1.7.5 installed${plain} from provided link, it is running now..."
     echo -e ""
     echo -e "x-ui control menu usages: "
     echo -e "----------------------------------------------"
@@ -185,4 +161,4 @@ install_x-ui() {
 
 echo -e "${green}Running...${plain}"
 install_base
-install_x-ui $1
+install_x-ui
