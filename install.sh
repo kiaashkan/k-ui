@@ -114,12 +114,12 @@ config_after_install() {
 install_x-ui() {
     cd /usr/local/
 
-    # لینک ثابت با نسخه 1.7.5
-    url="https://github.com/kiaashkan/k-ui/releases/download/${last_version}/x-ui-linux-$(arch3xui).tar.gz"
-    echo -e "Beginning to install x-ui v1.7.5 from provided link..."
+    # لینک ثابت
+    url="https://github.com/kiaashkan/k-ui/releases/download/v1.7.5/x-ui-linux-$(arch3xui).tar.gz"
+    echo -e "Beginning to install x-ui from provided link: $url"
     wget -N --no-check-certificate -O /usr/local/x-ui-linux-$(arch3xui).tar.gz "$url"
     if [[ $? -ne 0 ]]; then
-        echo -e "${red}Download x-ui v1.7.5 failed, please check the URL or your network ${plain}"
+        echo -e "${red}Download x-ui failed, please check the URL or your network${plain}"
         exit 1
     fi
 
@@ -140,7 +140,7 @@ install_x-ui() {
     systemctl daemon-reload
     systemctl enable x-ui
     systemctl start x-ui
-    echo -e "${green}x-ui v1.7.5 installed${plain} from provided link, it is running now..."
+    echo -e "${green}x-ui installed${plain} from provided link, it is running now..."
     echo -e ""
     echo -e "x-ui control menu usages: "
     echo -e "----------------------------------------------"
